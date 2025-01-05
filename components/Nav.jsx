@@ -1,22 +1,22 @@
 "use client";
 
-import Link from "next/link"; //for routing other pages
+import Link from "next/link"; // For routing other pages
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { signIn, signOut, useSession, getProviders } from "next-auth/react";
 
 const Nav = () => {
-  const isUserLoggedIn = true;
+  const isUserLoggedIn = true; // Mocked, replace with `useSession` if needed
   const [providers, setProviders] = useState(null);
   const [toggleDropdown, setToggleDropdown] = useState(false);
 
   useEffect(() => {
-    const setProviders = async () => {
+    const fetchProviders = async () => {
       const response = await getProviders();
       setProviders(response);
     };
 
-    setProviders();
+    fetchProviders();
   }, []);
 
   return (
@@ -48,7 +48,6 @@ const Nav = () => {
                 height={37}
                 alt="profile"
                 className="rounded-full"
-                
               />
             </Link>
           </div>
@@ -78,15 +77,34 @@ const Nav = () => {
               height={37}
               alt="profile"
               className="rounded-full"
-              onClick={setToggleDropdown(prev) => {prev}}
+              onClick={() => setToggleDropdown((prev) => !prev)}
             />
             {toggleDropdown && (
               <div className="dropdown">
-                <link href="/profile"
-                className="dropdown_link"
-                onClick={setToggleDropdown(false)}
-                />
-                My Pofile
+                <Link
+                  href="/profile"
+                  className="dropdown_link"
+                  onClick={() => setToggleDropdown(false)}
+                >
+                  My Profile
+                </Link>
+                <Link
+                  href="/create-prompt"
+                  className="dropdown_link"
+                  onClick={() => setToggleDropdown(false)}
+                >
+                  Create Prompt
+                </Link>
+                <button
+                  type="button"
+                  className="mt-4 w-full black_btn"
+                  onClick={() => {
+                    setToggleDropdown(false);
+                    signOut();
+                  }}
+                >
+                  Sign Out
+                </button>
               </div>
             )}
           </div>
